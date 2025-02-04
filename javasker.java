@@ -37,6 +37,8 @@ class tasker{
         } catch (NumberFormatException | IOException e) {
             e.printStackTrace();
         }}
+        if (stc.size()==0);
+        else{
         Collections.sort(stc);
         int a=stc.get(0);
         for (int x=0; x<stc.size(); x++){
@@ -47,7 +49,7 @@ class tasker{
                 }
             }
             a=b;
-        }
+        }}
     }
     public void add(String name){
         String[] info ={name,"in"};
@@ -66,11 +68,11 @@ class tasker{
             if (stk.empty()){
                 int id = tasks.size();
                 tasks.put(id,info);
-                System.out.println("Задача"+info[0]+": "+info[1]+" - "+id+" создана.");}
+                System.out.println("Задача "+info[0]+": "+info[1]+" - "+id+" создана.");}
             else{
                 int id = stk.pop();
                 tasks.put(stk.pop(),info);
-                System.out.println("Задача"+info[0]+": "+info[1]+" - "+id+" создана.");}}
+                System.out.println("Задача "+info[0]+": "+info[1]+" - "+id+" создана.");}}
         else System.out.println("Допустимы только значения 'in'- в процессе, 'skip'- отложено и 'done' - выполнено");
     }
     public void update(int id, String progress) {
@@ -79,6 +81,7 @@ class tasker{
             String[] info = tasks.get(id);
             info[1] = progress;
             tasks.put(id, info);
+            System.out.println("Задача обновлена");
         } else 
             System.out.println("Неверный id задачи");}
         else System.out.println("Допустимы только значения 'in'- в процессе, 'skip'- отложено и 'done' - выполнено");
@@ -93,7 +96,8 @@ class tasker{
     public void delete(int id){
         if (tasks.containsKey(id)){
             tasks.remove(id);
-            stk.push(id);}
+            stk.push(id);
+            System.out.println("Здача удалена");}
         else 
             System.out.println("неверный id задачи");
     }
@@ -133,6 +137,7 @@ class tasker{
                 writer.write(str);
                 writer.newLine();
             }
+            System.out.println("Сохранено");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -167,15 +172,18 @@ class voyager implements Runnable{
             System.out.println("update {id progress} - обновление статуса задачи по id");
             System.out.println("exit - завершить программу");
             System.out.println("P.S фигурные скобки в аргументах указывать не нужно");}
+            else System.out.println("Неверный набор аргументов");
         }
         else if (size==2){
             if (main.equals("view")) in.view(Integer.parseInt(com[1]));
             else if (main.equals("delete")) in.delete(Integer.parseInt(com[1]));
             else if (main.equals("new")) in.add(com[1]);
+            else System.out.println("Неверный набор аргументов");
         }
         else if (size==3){
             if (main.equals("new")) in.add(com[1], com[2]);
             else if (main.equals("update")) in.update(Integer.parseInt(com[1]), com[2]);
+            else System.out.println("Неверный набор аргументов");
         }
         else System.out.println("Неверный набор аргументов");
     }}
@@ -187,7 +195,7 @@ public class javasker {
         Scanner reader = new Scanner(System.in);
         while(true){
             String input = reader.nextLine();
-            if (input.equals("exit")) break;
+            if (input.equals("exit")){tasker.save(); break;}
             String[] info = input.split(" ");
             voyager voider = new voyager(tasker, info);
             Thread yakut = new Thread(voider);
